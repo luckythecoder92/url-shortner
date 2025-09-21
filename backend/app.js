@@ -1,10 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
-import { nanoid } from "nanoid";
-import connectDB from "./config/db.js";
-import urlSchema from "./models/shorturl.model.js";
-
 dotenv.config(); // load environment variables
+import { nanoid } from "nanoid";
+import connectDB from "./src/config/db.js";
+import urlSchema from "./src/models/shorturl.model.js";
+import shortUrlRoute from "./src/routes/short_url.routes.js";
+import shortUrl from "./src/models/shorturl.model.js";
+import { redirectShortUrl } from "./src/controller/shortUrl.controller.js";
+import { errorHandler } from "./src/utils/errorHandler.js";
+
 
 const app = express();
 
@@ -12,19 +16,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API route
-app.post("/api/create", (req, res) => {
-  const { url } = req.body;
-  const shortUrl = nanoid(7);
-  const newUrl = new urlSchema({
-    full_url : url,
-    short_url:shortUrl
-  })
-  newUrl.save();
-  res.send(nanoid(7));
-});
+app.use("/api/create",shortUrlRoute);
 
 
-
+app.get('/:id',redirectShortUrl)
+app.use(errorHandler)
 
 
 // Start server after DB connects
