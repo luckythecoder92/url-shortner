@@ -6,7 +6,7 @@ import tryCatchWrapper from "../utils/tryCatchWrapper.js";
 export const createShortUrl = tryCatchWrapper(async (req, res) => {
     const { url } = req.body;
     const shortUrl = await createShortUrlServiceWithoutUser(url);
-    res.send(process.env.APP_URL + shortUrl);
+    res.status(200).json({shortUrl:process.env.APP_URL + shortUrl});
 });
 
 export const redirectShortUrl = tryCatchWrapper(async (req, res) => {
