@@ -1,5 +1,6 @@
 import React from 'react'
-import UrlForm from './UrlForm'
+import UrlForm from '../components/UrlForm'
+import RegisterForm from '../components/RegisterForm'
 
 const HomePage = () => {
   return (
@@ -8,9 +9,9 @@ const HomePage = () => {
         <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">
           URL Shortener
         </h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
-       <UrlForm/>
-        </div>
+        
+      <UrlForm/>
+        
       </div>
     </div>
   )
