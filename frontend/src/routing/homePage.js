@@ -5,7 +5,7 @@ import { createRoute } from '@tanstack/react-router'
 
 export const homePageRoute = createRoute({
     getParentRoute: () => routeTree,
-    path:"/home",
+    path:"/",
     component: HomePage ,
 });
 

@@ -5,21 +5,36 @@ import tryCatchWrapper from "../utils/tryCatchWrapper.js";
 
 export const createShortUrl = tryCatchWrapper(async (req, res) => {
     const data = req.body;
-    // console.log(data);
-    let savedUrl;
-
-    if(req.user){
-        // console.log(data.slug);
-        savedUrl = await createShortUrlServiceWithUser(data.url, req.user._id, data.slug);
-    } else {
-        savedUrl = await createShortUrlServiceWithoutUser(url);
-    }
     
-    res.status(200).json({
+    if (!data.url) {
+        return res.status(400).json({ message: 'URL is required' });
+    }
 
+    let savedUrl;
+    try {
+        if (req.user) {
+            savedUrl = await createShortUrlServiceWithUser(data.url, req.user._id, data.slug);
+        } else {
+            savedUrl = await createShortUrlServiceWithoutUser(data.url);
+        }
+
+        if (!savedUrl || !savedUrl.short_url) {
+            return res.status(500).json({ message: 'Failed to create short URL' });
+        }
+
+        const baseUrl = process.env.APP_URL || 'http://localhost:3000/';
+        const shortUrl = `${baseUrl}${savedUrl.short_url}`;
         
-            shortUrl: `${process.env.BASE_URL || 'http://localhost:3000/'}${savedUrl.short_url}`,
-    });
+        console.log('Created short URL:', shortUrl);
+        
+        res.status(200).json({
+            shortUrl: shortUrl,
+            originalUrl: savedUrl.full_url
+        });
+    } catch (error) {
+        console.error('Error creating short URL:', error);
+        res.status(500).json({ message: error.message || 'Failed to create short URL' });
+    }
 
 });
 

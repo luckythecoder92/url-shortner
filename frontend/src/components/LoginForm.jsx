@@ -1,31 +1,40 @@
 import React, { useState } from "react";
-import { loginUser} from "../apis/user.api.js";
+import { loginUser } from "../apis/user.api.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, setLoading as setLoadingState, setError as setErrorState } from "../store/slices/authSlice";
+import { useNavigate } from "@tanstack/react-router";
+
 
 const LoginForm = ({state}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
+    dispatch(setErrorState(null));
+    dispatch(setLoadingState(true));
     try {
-      // Simulate API call
-      const data = await loginUser( email, password );
-      // console.log(data);
-      setLoading(false);
-      // throw new Error('Invalid credentials'); // Uncomment to test error
-      alert("Login submitted!");
+      const data = await loginUser(email, password);
+      dispatch(setUser(data.user));
+
+      
+      // Use await with navigation to ensure it completes
+      await navigate({
+        to: '/dashboard',
+        // Use replace to prevent going back to login page
+        replace: true
+      });
     } catch (err) {
-      setError(err.message || "Login failed");
-      setLoading(false);
+      dispatch(setErrorState(err.message || "Login failed"));
+      dispatch(setLoadingState(false));
     }
   };
 
   return (
-    <div className=" flex items-center justify-center bg-gray-100">
+    <div className="flex items-center justify-center bg-gray-100">
       <div
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded shadow-md w-full max-w-sm"

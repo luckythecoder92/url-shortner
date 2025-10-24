@@ -1,17 +1,15 @@
 import { Outlet } from '@tanstack/react-router'
-import AuthPage from './pages/AuthPage'
-import HomePage from './pages/HomePage'
+import Navbar from './pages/Navbar.jsx'
 
 const RouteLayout = () => {
   return (
-    <div>
-      
-  
-    <HomePage/>
-  <Outlet/>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <main className="max-w-10xl mx-auto  sm:px-5 lg:py-1 py-8">
+        <Outlet />
+      </main>
     </div>
-  
-  
   )
 } 
+
 export default RouteLayout

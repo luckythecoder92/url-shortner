@@ -18,7 +18,10 @@ export const registerUser = async (username, email, password) => {
 
 export const loginUser = async (email, password) => {
     const user = await findByEmail(email)
-    if (!user || user.password !== password) throw new ConflictError("Invalid Credentials")
+    if (!user) throw new ConflictError("Invalid Credentials")
+    
+    const isPasswordValid = await user.comparePassword(password)
+    if (!isPasswordValid) throw new ConflictError("Invalid Credentials")
 
     const token = await signToken({ id: user._id })
     return { token, user }

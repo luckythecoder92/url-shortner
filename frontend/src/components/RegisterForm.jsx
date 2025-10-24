@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { registerUser } from "../apis/user.api.js";
+import { useNavigate } from "@tanstack/react-router";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/slices/authSlice";
 
 const RegisterForm = ({ state }) => {
   const [username, setUsername] = useState("");
@@ -7,6 +10,8 @@ const RegisterForm = ({ state }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,8 +26,14 @@ const RegisterForm = ({ state }) => {
       // Simulate API call - replace with real API call later
       const data = await registerUser(username, email, password);
       setLoading(false);
-      // console.log(data);
-      alert("Registration successful!");
+        // Store user data and token
+  
+      // Use await with navigation and proper options
+      await navigate({
+        to: '/dashboard',
+        // Use replace to prevent going back to registration page
+        replace: true
+      });
       state(true); // Switch to login form on successful registration
     } catch (err) {
       setLoading(false);

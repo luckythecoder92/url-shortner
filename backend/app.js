@@ -27,6 +27,7 @@ app.use(attatchUser)
 // API route
 
 app.use("/api/auth", authRoute);
+
 app.use("/api/create", shortUrlRoute);
 app.get("/:id", redirectShortUrl);
 app.use(errorHandler);
