@@ -1,8 +1,11 @@
 import  axiosInstance  from "../utils/axiosInstance.js";
 
-export const createShortUrl = async(url) => {
+export const createShortUrl = async(url, customSlug) => {
     try {
-        const { data } = await axiosInstance.post('/api/create', { url });
+        const { data } = await axiosInstance.post('/api/create', { 
+            url,
+            slug: customSlug // Match backend parameter name
+        });
         console.log('API Response:', data);
         if (!data || !data.shortUrl) {
             throw new Error('Invalid response from server');

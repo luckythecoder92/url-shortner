@@ -10,9 +10,10 @@ const initialState = {
 
 export const shortenUrl = createAsyncThunk(
   'url/shorten',
-  async (url, { rejectWithValue }) => {
+  async ({ url, customSlug }, { rejectWithValue }) => {
     try {
-      const response = await createShortUrl(url);
+      // console.log(customSlug)
+      const response = await createShortUrl(url, customSlug);
       return response;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || 'Failed to create short URL');

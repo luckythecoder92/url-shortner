@@ -23,7 +23,7 @@ export const createShortUrlServiceWithoutUser = async (url) => {
         throw error;
     }
 }
-export const createShortUrlServiceWithUser = async (url, userId, slug=null) => {
+export const createShortUrlServiceWithUser = async (url, userId, slug) => {
     // Generate a random short URL if no custom slug is provided
     const shortUrl = slug || await generateNanoId(7);
     

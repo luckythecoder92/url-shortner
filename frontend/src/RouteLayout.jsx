@@ -5,7 +5,7 @@ const RouteLayout = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-10xl mx-auto  sm:px-5 lg:py-1 py-8">
+      <main className="max-w-10xl mt-20 mx-auto  sm:px-10 lg:py-1 py-8">
         <Outlet />
       </main>
     </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { registerUser } from "../apis/user.api.js";
 import { useNavigate } from "@tanstack/react-router";
 import { useDispatch } from "react-redux";
-import { setUser } from "../store/slices/authSlice";
+import { login } from "../store/slices/authSlice";
 
 const RegisterForm = ({ state }) => {
   const [username, setUsername] = useState("");
@@ -26,7 +26,9 @@ const RegisterForm = ({ state }) => {
       // Simulate API call - replace with real API call later
       const data = await registerUser(username, email, password);
       setLoading(false);
-        // Store user data and token
+      // Use the login action for registration success
+      dispatch(login(data.user));
+    
   
       // Use await with navigation and proper options
       await navigate({

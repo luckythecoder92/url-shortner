@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+  import React, { useState } from "react";
 import { loginUser } from "../apis/user.api.js";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, setLoading as setLoadingState, setError as setErrorState } from "../store/slices/authSlice";
+import { login, setLoading as setLoadingState, setError as setErrorState } from "../store/slices/authSlice";
 import { useNavigate } from "@tanstack/react-router";
 
 
@@ -18,7 +18,8 @@ const LoginForm = ({state}) => {
     dispatch(setLoadingState(true));
     try {
       const data = await loginUser(email, password);
-      dispatch(setUser(data.user));
+      // Use the new login action
+      dispatch(login(data.user));
 
       
       // Use await with navigation to ensure it completes

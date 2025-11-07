@@ -12,6 +12,7 @@ import authRoute from "./src/routes/auth.routes.js";
 import cookieparser from 'cookie-parser';
 import cors from 'cors';
 import { attatchUser } from "./src/utils/attachUser.js";
+import userRoute from "./src/routes/user.route.js"
 
 const app = express();
 
@@ -26,8 +27,8 @@ app.use(attatchUser)
 
 // API route
 
+app.use('/api/user',userRoute);
 app.use("/api/auth", authRoute);
-
 app.use("/api/create", shortUrlRoute);
 app.get("/:id", redirectShortUrl);
 app.use(errorHandler);

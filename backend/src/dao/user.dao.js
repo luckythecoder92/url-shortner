@@ -24,3 +24,7 @@ export const createUser = async(username,email,password)=>{
 export const getCustomShortUrl = async (slug) => {
     return await urlSchema.findOne({short_url:slug});
 }
+
+export const getUserUrls = async(userId)=>{
+    return await urlSchema.find({user:userId}); 
+}
