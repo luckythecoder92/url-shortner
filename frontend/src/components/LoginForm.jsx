@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "@tanstack/react-router";
-import { login, setErrorState, setLoadingState } from "../store/authSlice";
-import { loginUser } from "../api/auth";
+import { login, setError, setLoading } from "../store/slices/authSlice";
+import { loginUser } from "../apis/user.api";
  
 export default function LoginForm({ setShowRegister }) {
   const [email, setEmail] = useState("");
@@ -17,8 +17,8 @@ export default function LoginForm({ setShowRegister }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
  
-    dispatch(setErrorState(null));
-    dispatch(setLoadingState(true));
+    dispatch(setError(null));
+    dispatch(setLoading(true));
  try {
   const data = await loginUser(email, password);
 
@@ -30,9 +30,9 @@ export default function LoginForm({ setShowRegister }) {
   });
 } catch (err) {
   console.error("Login error:", err);
-  dispatch(setErrorState(err.message || "Login failed"));
+  dispatch(setError(err.message || "Login failed"));
 } finally {
-  dispatch(setLoadingState(false));
+  dispatch(setLoading(false));
 }
   };
  
