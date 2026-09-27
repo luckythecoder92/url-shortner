@@ -9,7 +9,7 @@ const fetchUserUrls = async () => {
   const response = await axiosInstance.get("/api/urls/user");
   return response.data;
 };
-
+const API_URL = import.meta.env.VITE_API_URL;
 const UserUrls = () => {
   const navigate = useNavigate();
   const [copiedId, setCopiedId] = useState(null);
@@ -162,7 +162,7 @@ const UserUrls = () => {
                 </td>
                 <td className="py-4 px-4">
                   <a
-                    href={`http://localhost:3000/${url.short_url}`}
+                    href={`${import.meta.env.VITE_API_URL}/${url.short_url}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 flex items-center"
@@ -180,7 +180,7 @@ const UserUrls = () => {
                   <button
                     onClick={() =>
                       handleCopy(
-                        `http://localhost:3000/${url.short_url}`,
+                        `${import.meta.env.VITE_API_URL}/${url.short_url}`,
                         url._id
                       )
                     }

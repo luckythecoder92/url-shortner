@@ -19,7 +19,7 @@ const LoginForm = ({state}) => {
     try {
       const data = await loginUser(email, password);
       // Use the new login action
-      dispatch(login(data.user));
+      dispatch(login(data.data));
 
       
       // Use await with navigation to ensure it completes

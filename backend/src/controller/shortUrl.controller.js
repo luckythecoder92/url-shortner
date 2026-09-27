@@ -22,7 +22,7 @@ export const createShortUrl = tryCatchWrapper(async (req, res) => {
             return res.status(500).json({ message: 'Failed to create short URL' });
         }
 
-        const baseUrl = process.env.APP_URL || 'http://localhost:3000/';
+        const baseUrl = process.env.APP_URL ;
         const shortUrl = `${baseUrl}${savedUrl.short_url}`;
         
         console.log('Created short URL:', shortUrl);

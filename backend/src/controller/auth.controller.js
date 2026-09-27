@@ -25,9 +25,11 @@ export const register_User = tryCatchWrapper(async (req, res) => {
 
 export const login_User = tryCatchWrapper(async (req, res) => {
     const { email, password } = req.body;
-    // console.log(req.body)   
+
     const { token, user } = await loginUser(email, password);
+
     res.cookie("accessToken", token, cookieOptions);
+
     res.status(200).json({
         success: true,
         message: "Login Successful",

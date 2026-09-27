@@ -1,41 +1,60 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, useNavigate, useMatch } from '@tanstack/react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../store/slices/authSlice'
+import { logoutUser } from '../apis/user.api'
 
 const Navbar = () => {
-  // We'll replace this with actual auth state management later
-  const [isAuthenticated] = useState(false)
+  const { isAuthenticated, user } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  
-  // Get current route match to highlight active link
+
   const homeMatch = useMatch('/')
   const dashboardMatch = useMatch('/dashboard')
-  
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser()
+
+      dispatch(logout())
+
+      await navigate({
+        to: '/',
+        replace: true,
+      })
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
+
   return (
     <nav className="bg-white shadow">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Left side - Brand and Navigation */}
+
+          {/* Left side */}
           <div className="flex items-center space-x-8">
-            <Link 
-              to="/" 
+
+            <Link
+              to="/"
               className="text-xl font-bold text-gray-800 hover:text-gray-700"
             >
               URL Shortener
             </Link>
-            
-            {/* Main navigation */}
+
             <div className="hidden md:flex space-x-4">
+
               <Link
                 to="/"
                 className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  homeMatch 
+                  homeMatch
                     ? 'text-blue-700 bg-blue-50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 Home
               </Link>
-              
+
               {isAuthenticated && (
                 <Link
                   to="/dashboard"
@@ -48,20 +67,22 @@ const Navbar = () => {
                   Dashboard
                 </Link>
               )}
+
             </div>
           </div>
 
-          {/* Right side - Auth buttons */}
+          {/* Right side */}
           <div className="flex items-center space-x-4">
+
             {isAuthenticated ? (
               <>
-                <span className="text-sm text-gray-600">Welcome!</span>
+                <span className="text-sm text-gray-600">
+                  Welcome{user?.username ? `, ${user.username}` : ''}!
+                </span>
+
                 <button
-                  onClick={() => {
-                    // We'll add logout logic later
-                    navigate('/')
-                  }}
-                  className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700"
                 >
                   Logout
                 </button>
@@ -69,11 +90,12 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/auth"
-                className="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
               >
                 Login
               </Link>
             )}
+
           </div>
         </div>
       </div>
