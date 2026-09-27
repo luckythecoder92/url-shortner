@@ -1,49 +1,53 @@
-  import React, { useState } from "react";
-import { loginUser } from "../apis/user.api.js";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, setLoading as setLoadingState, setError as setErrorState } from "../store/slices/authSlice";
 import { useNavigate } from "@tanstack/react-router";
-
-
-const LoginForm = ({state}) => {
+import { login, setErrorState, setLoadingState } from "../store/authSlice";
+import { loginUser } from "../api/auth";
+ 
+export default function LoginForm({ setShowRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+ 
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
+ 
+  const loading = useSelector((state) => state.auth.loading);
+  const error = useSelector((state) => state.auth.error);
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
+ 
     dispatch(setErrorState(null));
     dispatch(setLoadingState(true));
-    try {
-      const data = await loginUser(email, password);
-      // Use the new login action
-      dispatch(login(data.data));
+ try {
+  const data = await loginUser(email, password);
 
-      
-      // Use await with navigation to ensure it completes
-      await navigate({
-        to: '/dashboard',
-        // Use replace to prevent going back to login page
-        replace: true
-      });
-    } catch (err) {
-      dispatch(setErrorState(err.message || "Login failed"));
-      dispatch(setLoadingState(false));
-    }
+  dispatch(login(data.data));
+
+  navigate({
+    to: "/dashboard",
+    replace: true,
+  });
+} catch (err) {
+  console.error("Login error:", err);
+  dispatch(setErrorState(err.message || "Login failed"));
+} finally {
+  dispatch(setLoadingState(false));
+}
   };
-
+ 
   return (
     <div className="flex items-center justify-center bg-gray-100">
-      <div
+      <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded shadow-md w-full max-w-sm"
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+ 
         {error && (
           <div className="mb-4 text-red-600 text-center text-sm">{error}</div>
         )}
+ 
         <input
           className="w-full mb-4 px-3 py-2 border rounded focus:outline-none focus:ring"
           type="email"
@@ -53,6 +57,7 @@ const LoginForm = ({state}) => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+ 
         <input
           className="w-full mb-6 px-3 py-2 border rounded focus:outline-none focus:ring"
           type="password"
@@ -62,30 +67,31 @@ const LoginForm = ({state}) => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+ 
         <button
           type="submit"
-          onClick={handleSubmit}
           disabled={loading}
-          className={`w-full p-3 text-white rounded-lg transition-colors
-              ${
-                loading
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-              }`}
+          className={`w-full p-3 text-white rounded-lg transition-colors ${
+            loading
+              ? "bg-blue-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+ 
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
-            <span onClick={() => state(false)} className="text-blue-600 cursor-pointer hover:underline">
+            <span
+              onClick={() => setShowRegister(false)}
+              className="text-blue-600 cursor-pointer hover:underline"
+            >
               Register
             </span>
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
-};
-
-export default LoginForm;
+}
