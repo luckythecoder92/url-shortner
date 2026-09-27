@@ -23,7 +23,7 @@ export const createShortUrl = tryCatchWrapper(async (req, res) => {
         }
 
         const baseUrl = process.env.APP_URL ;
-        const shortUrl = `${baseUrl}${savedUrl.short_url}`;
+     const shortUrl = `${baseUrl}/${savedUrl.short_url}`;
         
         console.log('Created short URL:', shortUrl);
         
